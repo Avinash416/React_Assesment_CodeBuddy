@@ -1,15 +1,16 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 // import Home from "./pages/Home";
 import Posts from "./pages/Posts";
-import Root from "./pages/Root";
 import { StepperWithContent } from "./pages/Stepper";
+import Root from "./pages/Root";
+import "./pages/styles.css";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    // element: <Root />,
+    element: <Root />,
     children: [
-      { path: "/", element: <StepperWithContent/> },
+      { path: "/", element: <StepperWithContent /> },
       { path: "/posts", element: <Posts /> },
     ],
   },
