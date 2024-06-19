@@ -1,64 +1,88 @@
-import React from 'react';
-import { useForm } from 'react-hook-form';
+import PropTypes from "prop-types";
+import { useForm } from "react-hook-form";
 import { Button, Input } from "@material-tailwind/react";
+import "./styles.css";
 
-export function UserDetailsForm({ onBack, onSave, onSaveAndNext }) {
-    const { register, handleSubmit, formState: { errors } } = useForm();
+export function UserDetailsForm({ onBack, onSave, onSaveAndNext, defaultValues }) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: defaultValues || {},
+  });
+  // Set default form values using useForm hook
 
-    const onSubmit = data => {
-        console.log(data);
-        data && onSave(data)
-        onSaveAndNext();
-    };
+  const onSubmit = (data) => {
+    // Call onSave function with form data if defined
+    onSave(data);
 
-    return (
-        <form onSubmit={handleSubmit(onSubmit)} className='flex justify-center flex-col items-center min-h-[63vh]'>
-            <div className='m-auto w-1/3 border-2 border-solid rounded-md p-10 border-gray-700'>
+    // Call onSaveAndNext function to proceed to next step
+    onSaveAndNext();
+  };
 
-                <h1 className='text-center text-2xl mb-9'>User Details</h1>
-            <div className="mb-4">
-                <Input
-                    type="text"
-                    label="First Name"
-                    {...register("firstName", {
-                        required: "First name is required",
-                        minLength: { value: 2, message: "Minimum length is 2" },
-                        maxLength: { value: 50, message: "Maximum length is 50" },
-                        pattern: { value: /^[A-Za-z]+$/, message: "Only alphabets are allowed" }
-                    })}
-                />
-                    {errors.firstName && <span className='text-red-500'>{errors.firstName.message}</span>}
-            </div>
-            <div className="mb-4">
-                <Input
-                    type="text"
-                    label="Last Name"
-                    {...register("lastName", {
-                        pattern: { value: /^[A-Za-z]*$/, message: "Only alphabets are allowed" }
-                    })}
-                />
-                    {errors.lastName && <span className='text-red-500'>{errors.lastName.message}</span>}
-            </div>
-            <div className="mb-4">
-                <Input
-                    type="text"
-                    label="Address"
-                    {...register("address", { required: "Address is required", minLength: { value: 10, message: "Minimum length is 10" } })}
-                />
-                    {errors.address && <span className='text-red-500'>{errors.address.message}</span>}
-            </div>
-            </div>
-            <div className="flex gap-x-80 mt-20">
-                <Button onClick={onBack}>
-                    Back
-                </Button>
-                <Button onClick={onSave}>
-                    Save
-                </Button>
-                <Button type="submit">
-                    Save and Next
-                </Button>
-            </div>
-        </form>
-    );
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="form-container min-h-[60vh]">
+      <div className="form-sub-container w-4/5 md:w-2/3 lg:w-1/3">
+        <h1 className="heading mb-6">User Details</h1>
+        <div className="mb-4">
+          <Input
+            type="text"
+            label="First Name"
+            {...register("firstName", {
+              required: "First name is required",
+              minLength: { value: 2, message: "Minimum length is 2" },
+              maxLength: { value: 50, message: "Maximum length is 50" },
+              pattern: { value: /^[A-Za-z]+$/, message: "Only alphabets are allowed" },
+            })}
+          />
+          {errors.firstName && <span className="text-red-500">{errors.firstName.message}</span>}
+        </div>
+        <div className="mb-4">
+          <Input
+            type="text"
+            label="Last Name"
+            {...register("lastName", {
+              pattern: { value: /^[A-Za-z]*$/, message: "Only alphabets are allowed" },
+            })}
+          />
+          {errors.lastName && <span className="text-red-500">{errors.lastName.message}</span>}
+        </div>
+        <div className="mb-4">
+          <Input
+            type="text"
+            label="Address"
+            {...register("address", {
+              required: "Address is required",
+              minLength: { value: 10, message: "Minimum length is 10" },
+            })}
+          />
+          {errors.address && <span className="text-red-500">{errors.address.message}</span>}
+        </div>
+      </div>
+      <div className="buttons-container">
+        <Button className=" max-sm:w-3/5 button-group" onClick={onBack}>
+          Back
+        </Button>
+        <Button className="max-sm:w-3/5 button-group" onClick={onSave}>
+          Save
+        </Button>
+        <Button className="max-sm:w-3/5 button-group" type="submit">
+          Save and Next
+        </Button>
+      </div>
+    </form>
+  );
 }
+
+// PropTypes for component props
+UserDetailsForm.propTypes = {
+  onBack: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired,
+  onSaveAndNext: PropTypes.func.isRequired,
+  defaultValues: PropTypes.shape({
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    address: PropTypes.string,
+  }).isRequired,
+};
